@@ -6,7 +6,7 @@
 /*   By: gghaya <gghaya@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 13:36:24 by gghaya            #+#    #+#             */
-/*   Updated: 2023/08/02 15:12:09 by gghaya           ###   ########.fr       */
+/*   Updated: 2023/08/02 09:15:40 by gghaya           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 			i++;
 		}
 		dstt[n] = '\0';
+		// free((void *)src);
+		// free(srcc);
 		return (dstt);
 	}
 	return (0);
