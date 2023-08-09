@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gghaya <gghaya@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abazerou <abazerou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 08:40:47 by gghaya            #+#    #+#             */
-/*   Updated: 2023/08/08 14:48:04 by gghaya           ###   ########.fr       */
+/*   Updated: 2023/08/08 22:13:48 by abazerou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,14 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <string.h>
+# include <fcntl.h>
 # include "ft_libft/libft.h"
 # include <stdbool.h>
 # include <signal.h>
 
-# define IN	0
-# define OUT	1
-# define APPEND	2
+# define OUT		0
+# define IN			1
+# define APPEND		2
 # define HEREDOC	3
 
 int	g_status;
@@ -150,4 +151,99 @@ int			do_1(t_s *s);
 int			do_2(t_s *s, char	*arg, t_env *env);
 int			expand_2(t_ex	*ex, char	*s, t_env	*env);
 int			expand_1(t_ex	*ex);
+
+// *************EXCUTION***********//
+
+typedef struct s_var
+{
+	pid_t			child_pid;
+	int				fd[2];
+	int				save_fd;
+	int				fd_out;
+	int				i;
+	int				j;
+	int				x;
+	int				found;
+	int				size;
+	int				save_stdin;
+	int				_stdin;
+	int				_stdout;
+}	t_var;
+
+t_redirect	*ft_lstlast_red(t_redirect *lst);
+int			execution(t_final *lst, t_env **env, t_var *v);
+int			check_echo_option(t_final *lst, char c);
+int			check_echo_option_all(t_final *lst, char c, int n);
+void		echo_built(t_final *lst);
+int			is_op_valid(t_final *lst);
+void		print_arg(t_final *lst, int n);
+void		op_not_valid(t_final *lst, int i);
+int			check_next_op(t_final *lst);
+void		print_no_option(t_final *lst);
+int			ft_strncmp_low(const char *s1, const char *s2);
+void		pwd_built(t_env *env);
+void		cd_built(t_final *lst, t_env *env);
+void		p_error(t_final *lst, char *s, int j);
+void		env_built(t_env *env);
+int			home_dr(t_env *env);
+void		back_dr(t_env *env, char *old_pwd);
+void		forward_dr(t_env *env, char *old_pwd, char *new_cwd);
+int			unset_built(t_final *lst, t_env **env);
+void		exit_built(t_final *lst);
+void		exec_command(t_final *lst, t_env *env);
+char		**list_to_tab(t_env *env);
+char		**spliting_path(t_env *env, t_final *lst);
+void		executing_cmd(t_final *lst, char **env_tab, t_env *env, t_var *v);
+int			env_size(t_env *env);
+void		replace_pwd(t_env *cd_b, t_env *cd_b_tmp, char *save_p, char *old_pwd);
+int			place_dr(t_env *env, char *new_cwd);
+int			ft_env_size(t_env *env);
+void		export_built(t_final *lst, t_env *env);
+int			my_isspace(char c);
+int			my_isalpha(char c);
+int			my_isalnum(int c);
+int			my_isalnum_eq(char c);
+int			ex_without_equal(t_final *lst, char **tab, t_var *v, t_env *e);
+void		ex_equal(t_final *lst, t_env *env, char **tab, t_var *v);
+void		ex_join(t_final *lst, t_env *env, char **tab, t_var *v);
+void		print_export(t_env *tmp);
+int			check_space(t_final *lst, t_var *v);
+int			check_num(t_final *lst, t_var *v);
+void		loop_check(t_final *lst, t_env *env);
+int			check_equal_join(t_final *lst, t_env *env, char **tab, t_var *v);
+int			check_equal_join_helper(t_final *lst, t_env *env, char **tab, t_var *v);
+void		loop_check_help(t_final *lst, t_env *env, t_var *v);
+void		join_value(t_env *tmp, char **tab, t_env *env);
+char		*copy_str(char *str, char *non_eq, int size);
+int			parse_export(t_final *lst, int j, int i);
+int			parse_exprt_helper(t_final *lst, int j, int i);
+void		ft_delete_node(t_env **head, char *key);
+int			parse_unset(t_final *lst, int i, int j);
+int			check_firstchar(t_final *lst, int i);
+int			loop_arg(t_final *lst, int i, int j);
+char		*find_path(t_env *env);
+void		piping(t_var *v);
+void		search_path(char **splited_p, t_final *tmp, char **env_tab, t_var *v);
+int			is_builtins(t_final *lst);
+void		redirection(t_final *lst);
+int			out_red(t_final *lst);
+int			input_red(t_final *lst);
+int			appand_red(t_final *lst);
+void		save_fd(int save_stdout, int save_stdin);
+void		duping(int _stdin, int _stdout, int save_stdin);
+int			cd_parse(t_final *lst);
+void		set_pwd(t_env *env, char *home_d_value);
+void		my_perror(t_final *lst);
+int			cd_home(t_final *lst, t_env *env);
+void		p_error_export(t_final *lst, char *s, int j);
+int			loop_check_help_helper(t_final *lst, t_env *env, char **tab, t_var *v);
+char		**sub_var(t_final *lst, char **tab, t_var *v);
+void		check_if_found(t_final *tmp, char **splited_path, t_var *v);
+void		p_error_exit(t_final *lst, char *s, int j);
+t_env		*lstnew_env(char **content);
+char		**ft_freetab(char **tab);
+void		free_lst(t_final *lst);
+
+
+
 #endif

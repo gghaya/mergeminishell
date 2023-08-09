@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils8.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gghaya <gghaya@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abazerou <abazerou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 13:21:15 by gghaya            #+#    #+#             */
-/*   Updated: 2023/08/08 11:51:00 by gghaya           ###   ########.fr       */
+/*   Updated: 2023/08/08 22:27:31 by abazerou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,9 @@ int	get_token(char	*s)
 	if (ft_strcmp(s, ">>") == 0)
 		return (free(s), APPEND);
 	else if (ft_strcmp(s, ">") == 0)
-		return (free(s), IN);
-	else if (ft_strcmp(s, "<") == 0)
 		return (free(s), OUT);
+	else if (ft_strcmp(s, "<") == 0)
+		return (free(s), IN);
 	else if (ft_strcmp(s, "<<") == 0)
 		return (free(s), HEREDOC);
 	return (free(s), -1);

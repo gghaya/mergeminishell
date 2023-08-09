@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils9.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gghaya <gghaya@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abazerou <abazerou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 23:30:50 by gghaya            #+#    #+#             */
-/*   Updated: 2023/08/08 15:28:59 by gghaya           ###   ########.fr       */
+/*   Updated: 2023/08/08 21:40:35 by abazerou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_env	*fill_env(char	**envp)
 t_final	*ft_help1(t_tmpliste *liste, t_env *env)
 {
 	t_final	*f;
+	int status;
 
 	deletesp(&liste);
 	ft_heredoc(&liste, env);
@@ -49,7 +50,19 @@ t_final	*ft_help1(t_tmpliste *liste, t_env *env)
 	ft_join(&liste);
 	collect_red(&liste);
 	f = fill_final(&liste);
-	show_final(f);
+	// show_final(f);
+	exec_command(f, env);
+	while (waitpid(-1, &status, 0) != -1)
+	{
+		
+	}
+	if (WIFSIGNALED(status))
+	{
+		if (status == 2)
+			g_status = 130;
+		else if (status == 3)
+			g_status = 131;
+	}
 	return (f);
 }
 
